@@ -1,0 +1,90 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: testEmployeeSalary
+      id: testemployeesalary
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: testEmployeeSalary
+        setup-command: ''
+        command: ./gradlew test --tests "ua.kpi.its.oop.OrganizationTests.testEmployeeSalary"
+        timeout: 10
+        max-score: 2
+    - name: testDesignerSalary
+      id: testdesignersalary
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: testDesignerSalary
+        setup-command: ''
+        command: ./gradlew test --tests "ua.kpi.its.oop.OrganizationTests.testDesignerSalary"
+        timeout: 10
+        max-score: 2
+    - name: testDesignerSalaryHighEfficiency
+      id: testdesignersalaryhighefficiency
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: testDesignerSalaryHighEfficiency
+        setup-command: ''
+        command: ./gradlew test --tests "ua.kpi.its.oop.OrganizationTests.testDesignerSalaryHighEfficiency"
+        timeout: 10
+        max-score: 2
+    - name: testDesignerSalaryLowEfficiency
+      id: testdesignersalarylowefficiency
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: testDesignerSalaryLowEfficiency
+        setup-command: ''
+        command: ./gradlew test --tests "ua.kpi.its.oop.OrganizationTests.testDesignerSalaryLowEfficiency"
+        timeout: 10
+        max-score: 2
+    - name: testManagerSalaryWithSmallTeam
+      id: testmanagersalarywithsmallteam
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: testManagerSalaryWithSmallTeam
+        setup-command: ''
+        command: ./gradlew test --tests "ua.kpi.its.oop.OrganizationTests.testManagerSalaryWithSmallTeam"
+        timeout: 10
+        max-score: 4
+    - name: testManagerSalaryWithLargeTeam
+      id: testmanagersalarywithlargeteam
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: testManagerSalaryWithLargeTeam
+        setup-command: ''
+        command: ./gradlew test --tests "ua.kpi.its.oop.OrganizationTests.testManagerSalaryWithLargeTeam"
+        timeout: 10
+        max-score: 4
+    - name: testDepartmentGiveSalary
+      id: testdepartmentgivesalary
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: testDepartmentGiveSalary
+        setup-command: ''
+        command: ./gradlew test --tests "ua.kpi.its.oop.OrganizationTests.testDepartmentGiveSalary"
+        timeout: 10
+        max-score: 4
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        TESTEMPLOYEESALARY_RESULTS: "${{steps.testemployeesalary.outputs.result}}"
+        TESTDESIGNERSALARY_RESULTS: "${{steps.testdesignersalary.outputs.result}}"
+        TESTDESIGNERSALARYHIGHEFFICIENCY_RESULTS: "${{steps.testdesignersalaryhighefficiency.outputs.result}}"
+        TESTDESIGNERSALARYLOWEFFICIENCY_RESULTS: "${{steps.testdesignersalarylowefficiency.outputs.result}}"
+        TESTMANAGERSALARYWITHSMALLTEAM_RESULTS: "${{steps.testmanagersalarywithsmallteam.outputs.result}}"
+        TESTMANAGERSALARYWITHLARGETEAM_RESULTS: "${{steps.testmanagersalarywithlargeteam.outputs.result}}"
+        TESTDEPARTMENTGIVESALARY_RESULTS: "${{steps.testdepartmentgivesalary.outputs.result}}"
+      with:
+        runners: testemployeesalary,testdesignersalary,testdesignersalaryhighefficiency,testdesignersalarylowefficiency,testmanagersalarywithsmallteam,testmanagersalarywithlargeteam,testdepartmentgivesalary
